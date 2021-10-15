@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.music.dao.SingerMapper">
+    <resultMap id="singerResult" type="com.zh.music.bean.Singer">
+        <id column="id"  property="id"/>
+        <result column="name"  property="name"/>
+        <result column="sex"  property="sex"/>
+        <result column="picture"  property="picture"/>
+        <result column="birth"  property="birth"/>
+        <result column="location"  property="location"/>
+        <result column="introduction"  property="introduction"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.zh.music.bean.Singer">
+        insert into singer(name,sex,picture,birth,location,introduction)
+        values (#{name},#{sex},#{picture},#{birth},#{location},#{introduction})
+    </insert>
+    <update id="update" parameterType="com.zh.music.bean.Singer">
+        update singer
+        <set>
+            <if test="name !=null">
+                name = #{name},
+            </if>
+            <if test="sex !=null">
+                sex = #{sex},
+            </if>
+            <if test="picture !=null">
+                picture = #{picture},
+            </if>
+            <if test="birth !=null">
+                birth = #{birth},
+            </if>
+            <if test="location !=null">
+                location = #{location},
+            </if>
+            <if test="introduction !=null">
+                introduction = #{introduction},
+            </if>
+            
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete  from singer where id=#{id}
+    </delete>
+    <select id="queryById" resultMap="singerResult" parameterType="java.lang.Integer">
+        select * from singer where id=#{id}
+    </select>
+    <select id="queryAllSinger" resultMap="singerResult">
+        select * from singer
+    </select>
+    <select id="queryByName" resultMap="singerResult" parameterType="java.lang.String">
+        select * from singer where name like #{name}
+    </select>
+    <select id="queryBySex" resultMap="singerResult" parameterType="java.lang.Integer">
+        select * from singer where sex= #{sex}
+    </select>
+</mapper>
