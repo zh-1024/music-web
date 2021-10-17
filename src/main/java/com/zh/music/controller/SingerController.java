@@ -6,11 +6,13 @@ import com.zh.music.service.SingerService;
 import com.zh.music.service.impl.SingerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -90,5 +92,33 @@ public class SingerController {
         List<Singer> singers = singerService.queryBySex(sex);
         return singers;
     }
-
+    @PostMapping("/uploadImg")
+    public Object uploadImg(@RequestParam("file") MultipartFile avatorFile,
+                            @RequestParam("id") int id) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        if(avatorFile.isEmpty())
+        {
+            jsonObject.put("code",0);
+            jsonObject.put("message", "文件上传失败");
+            return jsonObject;
+        }
+        String filename=System.currentTimeMillis()+avatorFile.getOriginalFilename();
+        String filePath= ResourceUtils.getURL("classpath:").getPath()+"/static/img/";
+        File file = new File(filePath+filename);
+        //存储再数据库种的相对文件地址
+        String storePath="/img/"+filename;
+        avatorFile.transferTo(file);
+        Singer singer=new Singer();
+        singer.setId(id);
+        singer.setPicture(storePath);
+        boolean update = singerService.update(singer);
+        if(update){
+            jsonObject.put("code",1);
+            jsonObject.put("message", "上传成功");
+            return jsonObject;
+        }
+        jsonObject.put("code",0);
+        jsonObject.put("message", "上传失败");
+        return jsonObject;
+    }
 }
