@@ -11,7 +11,7 @@ import java.util.Comparator;
 class MusicWebApplicationTests {
     @Test
     public void test() throws FileNotFoundException {
-        String filePath= ResourceUtils.getURL("classpath:").getPath()+"/static/img/";
-        System.out.println(filePath);
+        char c='张';
+        System.out.println(c);
     }
 }

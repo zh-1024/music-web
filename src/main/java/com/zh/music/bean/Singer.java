@@ -17,7 +17,7 @@ import java.util.Date;
 
 @Data
 @ToString
-public class Singer {
+public class Singer {   
     private Integer id;
     private String name;
     private Byte sex;
