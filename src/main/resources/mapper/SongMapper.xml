@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.music.dao.SongMapper">
+    <resultMap id="BaseSongResult" type="com.zh.music.bean.Song">
+        <id column="id"  property="id"/>
+        <result column="singer_id"  property="singerId"/>
+        <result column="name"  property="name"/>
+        <result column="introduction"  property="introduction"/>
+        <result column="create_time"  property="createTime"/>
+        <result column="update_time"  property="updateTime"/>
+        <result column="pic"  property="pic"/>
+        <result column="url"  property="url"/>
+    </resultMap>
+    <resultMap id="SongResultWithLyric" type="com.zh.music.bean.Song" extends="BaseSongResult">
+        <result column="lyric"  property="lyric"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,singer_id,name,introduction,create_time,update_time,pic,url
+    </sql>
+    <sql id="Lyric_Column_List">
+        id,singer_id,name,introduction,create_time,update_time,pic,lyric,url
+    </sql>
+
+    <insert id="insert" parameterType="com.zh.music.bean.Song">
+        insert into song(singer_id,name,introduction,create_time,update_time,pic,lyric,url)
+        values (#{singerId},#{name},#{introduction},now(),now(),#{pic},#{lyric},#{url})
+    </insert>
+    <update id="update" parameterType="com.zh.music.bean.Song">
+        update song
+        <set>
+            <if test="singerId !=null">
+                singer_id = #{singerId},
+            </if>
+            <if test="name !=null">
+                name = #{name},
+            </if>
+            <if test="introduction !=null">
+                introduction = #{introduction},
+            </if>
+            update_time=now(),
+            <if test="pic !=null">
+                pic = #{pic},
+            </if>
+            <if test="lyric !=null">
+                lyric = #{lyric},
+            </if>
+            <if test="url !=null">
+                url = #{url},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete  from song where id=#{id}
+    </delete>
+    <select id="queryById" resultMap="SongResultWithLyric" parameterType="java.lang.Integer">
+        select
+        <include refid="Lyric_Column_List"/>
+        from song where id=#{id}
+    </select>
+    <select id="queryAllSong" resultMap="SongResultWithLyric">
+        select
+        <include refid="Lyric_Column_List"/>
+        from song
+    </select>
+    <select id="queryByName" resultMap="SongResultWithLyric" parameterType="java.lang.String">
+        select
+        <include refid="Lyric_Column_List"/>
+        from song where name like #{name}
+    </select>
+    <select id="queryBySingerId" resultMap="SongResultWithLyric" parameterType="java.lang.Integer">
+        select
+        <include refid="Lyric_Column_List"/>
+        from song where singer_id= #{singerId}
+    </select>
+</mapper>

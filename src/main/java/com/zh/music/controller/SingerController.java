@@ -29,7 +29,6 @@ public class SingerController {
     private SingerServiceImpl singerService;
     @PostMapping("/insertSinger")
     public Object insertSinger(Singer singer){
-        System.out.println(singer);
         boolean flag = singerService.insert(singer);
         JSONObject jsonObject = new JSONObject();
         if(flag)
@@ -42,8 +41,9 @@ public class SingerController {
         jsonObject.put("message", "插入失败");
         return jsonObject;
     }
-    @GetMapping("/updateSinger")
+    @PostMapping("/updateSinger")
     public Object updateSinger(Singer singer){
+        System.out.println(singer);
         boolean flag = singerService.update(singer);
         JSONObject jsonObject = new JSONObject();
         if(flag)
@@ -59,6 +59,19 @@ public class SingerController {
     }
     @GetMapping("/deleteSinger")
     public Object deleteSinger(Integer id){
+
+        Singer singer1 = singerService.queryById(id);
+        String oldImg=singer1.getPicture();
+        if(!"/img/singerPic/singer.jpg".equals(oldImg)){
+            File file = new File(System.getProperty("user.dir")+ oldImg);
+            if(file.exists())
+            {
+                file.delete();
+            }
+
+        }
+
+        System.out.println(id);
         boolean flag = singerService.delete(id);
         JSONObject jsonObject = new JSONObject();
         if(flag)
@@ -95,18 +108,29 @@ public class SingerController {
     @PostMapping("/uploadImg")
     public Object uploadImg(@RequestParam("file") MultipartFile avatorFile,
                             @RequestParam("id") int id) throws IOException {
+        Singer singer1 = singerService.queryById(id);
+        String oldImg=singer1.getPicture();
+        if(!"/img/singerPic/singer.jpg".equals(oldImg)){
+            File file = new File(System.getProperty("user.dir")+ oldImg);
+            if(file.exists())
+            {
+                file.delete();
+            }
+        }
+        String filename=System.currentTimeMillis()+avatorFile.getOriginalFilename();
+        String filePath= System.getProperty("user.dir")+System.getProperty("file.separator")+"img"
+                +System.getProperty("file.separator")+"singerPic";
         JSONObject jsonObject = new JSONObject();
         if(avatorFile.isEmpty())
         {
             jsonObject.put("code",0);
-            jsonObject.put("message", "文件上传失败");
+            jsonObject.put("message", "歌曲上传失败");
             return jsonObject;
         }
-        String filename=System.currentTimeMillis()+avatorFile.getOriginalFilename();
-        String filePath= ResourceUtils.getURL("classpath:").getPath()+"/static/img/";
-        File file = new File(filePath+filename);
+
+        File file = new File(filePath+System.getProperty("file.separator")+filename);
         //存储再数据库种的相对文件地址
-        String storePath="/img/"+filename;
+        String storePath="/img/singerPic/"+filename;
         avatorFile.transferTo(file);
         Singer singer=new Singer();
         singer.setId(id);
