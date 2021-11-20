@@ -19,4 +19,5 @@ public interface SongService {
     public List<Song> queryByName(String name);
     //根据歌手id查询
     public List<Song> queryBySingerId(Integer singerId);
+    public int getSongCount();
 }

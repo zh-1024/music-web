@@ -28,4 +28,5 @@ public interface SingerService {
 
     //根据性别查询
     public List<Singer> queryBySex(Integer sex);
+    public int getSingerCount();
 }

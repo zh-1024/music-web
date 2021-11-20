@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
 
 @Data
 @ToString
-public class Singer {   
+public class Singer implements Serializable {
     private Integer id;
     private String name;
     private Byte sex;

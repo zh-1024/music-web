@@ -56,4 +56,8 @@
     <select id="queryBySex" resultMap="singerResult" parameterType="java.lang.Integer">
         select * from singer where sex= #{sex}
     </select>
+    <select id="getSingerCount" resultType="java.lang.Integer">
+        select count(*)
+        from singer
+    </select>
 </mapper>

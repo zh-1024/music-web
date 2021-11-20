@@ -15,6 +15,11 @@ public class resourcesConfig implements WebMvcConfigurer {
          "file:"+System.getProperty("user.dir")+System.getProperty("file.separator")+"img"
          +System.getProperty("file.separator")+"singerPic"+System.getProperty("file.separator")
        );
+        //用户头像地址
+        registry.addResourceHandler("/img/userAvatar/**").addResourceLocations(
+                "file:"+System.getProperty("user.dir")+System.getProperty("file.separator")+"img"
+                        +System.getProperty("file.separator")+"userAvatar"+System.getProperty("file.separator")
+        );
        //歌曲图片地址
         registry.addResourceHandler("/img/songPic/**").addResourceLocations(
                 "file:"+System.getProperty("user.dir")+System.getProperty("file.separator")+"img"

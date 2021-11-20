@@ -15,6 +15,8 @@ public interface SongMapper {
     public Song queryById(Integer id);
     //查询所有歌曲
     public List<Song> queryAllSong();
+    //查询歌曲数量
+    public int getSongCount();
 
     //根据歌曲名字查询
     public List<Song> queryByName(String name);

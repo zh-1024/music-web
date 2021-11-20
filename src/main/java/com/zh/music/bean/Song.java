@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @ToString
-public class Song {
+public class Song implements Serializable {
     private Integer id;
     //歌曲Id
     private Integer singerId;

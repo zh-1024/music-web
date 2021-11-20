@@ -2,16 +2,14 @@ package com.zh.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zh.music.bean.Singer;
-import com.zh.music.service.SingerService;
+import com.zh.music.bean.SongList;
 import com.zh.music.service.impl.SingerServiceImpl;
+import com.zh.music.service.impl.SongListServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,28 +21,27 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/singer")
-public class SingerController {
+@RequestMapping("/songList")
+public class SongListController {
     @Autowired
-    private SingerServiceImpl singerService;
-    @PostMapping("/insertSinger")
-    public Object insertSinger(Singer singer){
-        boolean flag = singerService.insert(singer);
+    private SongListServiceImpl songListService;
+    @PostMapping("/insertSongList")
+    public Object insertSongList(SongList songList){
+        boolean flag = songListService.insert(songList);
         JSONObject jsonObject = new JSONObject();
         if(flag)
         {
             jsonObject.put("code",1);
-            jsonObject.put("message", "插入成功");
+            jsonObject.put("message", "添加成功");
             return jsonObject;
         }
         jsonObject.put("code",0);
-        jsonObject.put("message", "插入失败");
+        jsonObject.put("message", "添加失败");
         return jsonObject;
     }
-    @PostMapping("/updateSinger")
-    public Object updateSinger(Singer singer){
-        System.out.println(singer);
-        boolean flag = singerService.update(singer);
+    @PostMapping("/updateSongList")
+    public Object updateSongList(SongList songList){
+        boolean flag = songListService.update(songList);
         JSONObject jsonObject = new JSONObject();
         if(flag)
         {
@@ -57,12 +54,12 @@ public class SingerController {
 
         return jsonObject;
     }
-    @GetMapping("/deleteSinger")
-    public Object deleteSinger(Integer id){
+    @GetMapping("/deleteSongList")
+    public Object deleteSongList(Integer id){
 
-        Singer singer1 = singerService.queryById(id);
-        String oldImg=singer1.getPicture();
-        if(!"/img/singerPic/singer.jpg".equals(oldImg)){
+        SongList songList = songListService.queryById(id);
+        String oldImg=songList.getPic();
+        if(!"/img/songListPic/songList-logo.jpg".equals(oldImg)){
             File file = new File(System.getProperty("user.dir")+ oldImg);
             if(file.exists())
             {
@@ -70,9 +67,7 @@ public class SingerController {
             }
 
         }
-
-        System.out.println(id);
-        boolean flag = singerService.delete(id);
+        boolean flag = songListService.delete(id);
         JSONObject jsonObject = new JSONObject();
         if(flag)
         {
@@ -85,32 +80,28 @@ public class SingerController {
 
         return jsonObject;
     }
-    @GetMapping("/querySingerById")
-    public Object querySingerById(Integer id){
-        Singer singer = singerService.queryById(id);
-        return singer;
+    @GetMapping("/querySongListById")
+    public Object querySongListById(Integer id){
+        SongList songList = songListService.queryById(id);
+        return songList;
     }
-    @GetMapping("/queryAllSinger")
-    public Object queryAllSinger(){
-        List<Singer> singers = singerService.queryAllSinger();
-        return singers;
+    @GetMapping("/queryAllSongList")
+    public Object queryAllSongList(){
+        List<SongList> songLists = songListService.queryAllSongList();
+        return songLists;
     }
-    @GetMapping("/querySingerByName")
-    public Object querySingerByName(String name){
-        List<Singer> singers = singerService.queryByName("%"+name+"%");
-        return singers;
+    @GetMapping("/querySongListByStyle")
+    public Object querySongListByStyle(String style){
+        List<SongList> songLists = songListService.queryByStyle(style);
+        return songLists;
     }
-    @GetMapping("/querySingerBySex")
-    public Object querySingerBySex(Integer sex){
-        List<Singer> singers = singerService.queryBySex(sex);
-        return singers;
-    }
+
     @PostMapping("/uploadImg")
     public Object uploadImg(@RequestParam("file") MultipartFile avatorFile,
                             @RequestParam("id") int id) throws IOException {
-        Singer singer1 = singerService.queryById(id);
-        String oldImg=singer1.getPicture();
-        if(!"/img/singerPic/singer.jpg".equals(oldImg)){
+        SongList songList = songListService.queryById(id);
+        String oldImg=songList.getPic();
+        if(!"/img/songListPic/songList-logo.jpg".equals(oldImg)){
             File file = new File(System.getProperty("user.dir")+ oldImg);
             if(file.exists())
             {
@@ -119,7 +110,7 @@ public class SingerController {
         }
         String filename=System.currentTimeMillis()+avatorFile.getOriginalFilename();
         String filePath= System.getProperty("user.dir")+System.getProperty("file.separator")+"img"
-                +System.getProperty("file.separator")+"singerPic";
+                +System.getProperty("file.separator")+"songListPic";
         JSONObject jsonObject = new JSONObject();
         if(avatorFile.isEmpty())
         {
@@ -130,12 +121,12 @@ public class SingerController {
 
         File file = new File(filePath+System.getProperty("file.separator")+filename);
         //存储再数据库种的相对文件地址
-        String storePath="/img/singerPic/"+filename;
+        String storePath="/img/songListPic/"+filename;
         avatorFile.transferTo(file);
-        Singer singer=new Singer();
-        singer.setId(id);
-        singer.setPicture(storePath);
-        boolean update = singerService.update(singer);
+        SongList songList1 = new SongList();
+        songList1.setId(id);
+        songList1.setPic(storePath);
+        boolean update = songListService.update(songList1);
         if(update){
             jsonObject.put("code",1);
             jsonObject.put("message", "上传成功");
@@ -145,8 +136,8 @@ public class SingerController {
         jsonObject.put("message", "上传失败");
         return jsonObject;
     }
-    @GetMapping("/getSingerCount")
-    public Object getSingerCount(){
-        return singerService.getSingerCount();
+    @GetMapping("/getSongListCount")
+    public Object getSongCount(){
+        return songListService.getSongListCount();
     }
 }

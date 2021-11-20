@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zh.music.dao.ListSongMapper">
+    <resultMap id="ListSongResult" type="com.zh.music.bean.ListSong">
+        <id column="id"  property="id"/>
+        <result column="song_id"  property="songId"/>
+        <result column="song_list_id"  property="songListId"/>
+    </resultMap>
+    <sql id="Column_List">
+        id,song_id,song_list_id
+    </sql>
+    <insert id="insert" parameterType="com.zh.music.bean.ListSong">
+        insert into list_song(song_id,song_list_id)
+        values (#{songId},#{songListId})
+    </insert>
+    <update id="update" parameterType="com.zh.music.bean.ListSong">
+        update list_song
+        <set>
+            <if test="songId !=null">
+                song_id = #{songId},
+            </if>
+            <if test="songListId !=null">
+                song_list_id = #{songListId},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="deleteBySongIdAndSongListID" parameterType="java.lang.Integer">
+        delete  from list_song where song_id=#{songId} and song_list_id=#{songListId}
+    </delete>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete  from list_song where id=#{id}
+    </delete>
+    <select id="queryById" resultMap="ListSongResult" parameterType="java.lang.Integer">
+        select
+        <include refid="Column_List"/>
+        from list_song where id=#{id}
+    </select>
+    <select id="queryAllListSong" resultMap="ListSongResult">
+        select
+        <include refid="Column_List"/>
+        from list_song
+    </select>
+    <select id="queryBySongListId" resultMap="ListSongResult" parameterType="java.lang.Integer">
+        select
+        <include refid="Column_List"/>
+        from list_song where song_list_id=#{id}
+    </select>
+</mapper>

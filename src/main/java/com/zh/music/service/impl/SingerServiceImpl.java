@@ -60,4 +60,9 @@ public class SingerServiceImpl implements SingerService {
         List<Singer> singers = singerMapper.queryBySex(sex);
         return singers;
     }
+
+    @Override
+    public int getSingerCount() {
+        return singerMapper.getSingerCount();
+    }
 }

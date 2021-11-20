@@ -46,4 +46,9 @@ public class SongServiceImpl implements SongService {
     public List<Song> queryBySingerId(Integer singerId) {
         return songMapper.queryBySingerId(singerId);
     }
+
+    @Override
+    public int getSongCount() {
+        return songMapper.getSongCount();
+    }
 }

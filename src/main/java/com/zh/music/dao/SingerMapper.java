@@ -16,7 +16,7 @@ public interface SingerMapper {
     public Singer queryById(Integer id);
     //查询所有歌手
     public List<Singer> queryAllSinger();
-
+    public int getSingerCount();
     //根据歌手名字模糊查询
     public List<Singer> queryByName(String name);
 

@@ -68,7 +68,11 @@
     <select id="queryByName" resultMap="SongResultWithLyric" parameterType="java.lang.String">
         select
         <include refid="Lyric_Column_List"/>
-        from song where name like #{name}
+        from song where name = #{name}
+    </select>
+    <select id="getSongCount" resultType="java.lang.Integer">
+        select count(*)
+        from song
     </select>
     <select id="queryBySingerId" resultMap="SongResultWithLyric" parameterType="java.lang.Integer">
         select
